@@ -1,4 +1,4 @@
-package com.firebase_todo_bloc.firebase_todo_bloc;
+package com.firebase_todo_bloc;
 
 import io.flutter.embedding.android.FlutterActivity;
 
