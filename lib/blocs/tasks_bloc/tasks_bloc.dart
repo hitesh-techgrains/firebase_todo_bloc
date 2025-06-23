@@ -1,13 +1,16 @@
 import 'package:equatable/equatable.dart';
+import 'package:firebase_todo_bloc/repository/firestore_repository.dart';
 import '../../models/task.dart';
 import '../bloc_exports.dart';
 
 part 'tasks_event.dart';
+
 part 'tasks_state.dart';
 
-class TasksBloc extends HydratedBloc<TasksEvent, TasksState> {
+class TasksBloc extends Bloc<TasksEvent, TasksState> {
   TasksBloc() : super(const TasksState()) {
     on<AddTask>(_onAddTask);
+    on<GetAllTasks>(onGetAllTasks);
     on<UpdateTask>(_onUpdateTask);
     on<DeleteTask>(_onDeleteTask);
     on<RemoveTask>(_onRemoveTask);
@@ -17,7 +20,37 @@ class TasksBloc extends HydratedBloc<TasksEvent, TasksState> {
     on<DeleteAllTasks>(_onDeleteAllTask);
   }
 
-  void _onAddTask(AddTask event, Emitter<TasksState> emit) {}
+  void _onAddTask(AddTask event, Emitter<TasksState> emit) async {
+    await FireStoreRepository.create(task: event.task);
+  }
+
+  void onGetAllTasks(GetAllTasks event, Emitter<TasksState> emit) async {
+    try {
+      List<Task> pendingTasks = [];
+      List<Task> completedTasks = [];
+      List<Task> favoriteTasks = [];
+      List<Task> removedTasks = [];
+
+      final tasks = await FireStoreRepository().getTasks();
+      for (var task in tasks) {
+        if (task.isDeleted == true) {
+          removedTasks.add(task);
+        } else {
+          if (task.isFavorite == true) {
+            favoriteTasks.add(task);
+          }
+          if (task.isDone == true) {
+            completedTasks.add(task);
+          } else {
+            pendingTasks.add(task);
+          }
+        }
+      }
+      emit(TasksState(pendingTasks: pendingTasks, completedTasks: completedTasks, favoriteTasks: favoriteTasks, removedTasks: removedTasks));
+    } catch (e) {
+      print(e);
+    }
+  }
 
   void _onUpdateTask(UpdateTask event, Emitter<TasksState> emit) {}
 
@@ -25,22 +58,11 @@ class TasksBloc extends HydratedBloc<TasksEvent, TasksState> {
 
   void _onRemoveTask(RemoveTask event, Emitter<TasksState> emit) {}
 
-  void _onMarkFavoriteOrUnfavoriteTask(
-      MarkFavoriteOrUnfavoriteTask event, Emitter<TasksState> emit) {}
+  void _onMarkFavoriteOrUnfavoriteTask(MarkFavoriteOrUnfavoriteTask event, Emitter<TasksState> emit) {}
 
   void _onEditTask(EditTask event, Emitter<TasksState> emit) {}
 
   void _onRestoreTask(RestoreTask event, Emitter<TasksState> emit) {}
 
   void _onDeleteAllTask(DeleteAllTasks event, Emitter<TasksState> emit) {}
-
-  @override
-  TasksState? fromJson(Map<String, dynamic> json) {
-    return TasksState.fromMap(json);
-  }
-
-  @override
-  Map<String, dynamic>? toJson(TasksState state) {
-    return state.toMap();
-  }
 }

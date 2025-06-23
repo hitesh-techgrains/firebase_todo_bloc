@@ -75,6 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         .signInWithEmailAndPassword(email: _emailController.text.trim(), password: _passwordController.text.trim())
                         .then((userCredential) {
                           GetStorage().write('userId', userCredential.user!.uid);
+                          GetStorage().write('email', userCredential.user!.email);
 
                           // Navigate to home screen or another screen after successful login
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Login successful"), backgroundColor: Colors.green));
