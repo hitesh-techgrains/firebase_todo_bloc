@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_todo_bloc/screens/tabs_screen.dart';
+import 'package:get_storage/get_storage.dart';
 
 import '../screens/register_screen.dart';
 import 'package:flutter/material.dart';
@@ -73,6 +74,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     _auth
                         .signInWithEmailAndPassword(email: _emailController.text.trim(), password: _passwordController.text.trim())
                         .then((userCredential) {
+                          GetStorage().write('userId', userCredential.user!.uid);
+
                           // Navigate to home screen or another screen after successful login
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Login successful"), backgroundColor: Colors.green));
                           Navigator.of(context).pushReplacementNamed(TabsScreen.id);

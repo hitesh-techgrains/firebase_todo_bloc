@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_todo_bloc/screens/login_screen.dart';
+import 'package:firebase_todo_bloc/screens/splash_screen.dart';
 import 'package:firebase_todo_bloc/services/app_router.dart';
 import 'package:firebase_todo_bloc/services/app_theme.dart';
 import 'package:flutter/foundation.dart';
@@ -53,7 +54,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             title: 'Flutter Tasks App',
             theme: state.switchValue ? AppThemes.appThemeData[AppTheme.darkTheme] : AppThemes.appThemeData[AppTheme.lightTheme],
-            home: LoginScreen(),
+            home: SplashScreen(),
             onGenerateRoute: appRouter.onGenerateRoute,
           );
         },

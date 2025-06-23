@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_todo_bloc/screens/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'recycle_bin.dart';
 import 'tabs_screen.dart';
 
@@ -68,6 +69,7 @@ class MyDrawer extends StatelessWidget {
     try {
       await FirebaseAuth.instance.signOut();
       // Clear navigation stack and go to login screen
+      GetStorage().remove('userId');
       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => LoginScreen()), (Route<dynamic> route) => false);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Logout failed: $e")));
