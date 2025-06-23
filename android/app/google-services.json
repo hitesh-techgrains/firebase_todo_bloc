@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "595306011903",
-    "project_id": "webviewdemo-d5cca",
-    "storage_bucket": "webviewdemo-d5cca.firebasestorage.app"
+    "project_number": "87522241732",
+    "project_id": "fir-todo-bloc-89528",
+    "storage_bucket": "fir-todo-bloc-89528.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:595306011903:android:12f2b248da1eb8fc8900ca",
+        "mobilesdk_app_id": "1:87522241732:android:f488edc30f7394bb4bad91",
         "android_client_info": {
           "package_name": "com.firebase_todo_bloc"
         }
@@ -15,26 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDKWUYCW1PQzMXTL7YaTHdo-Le5jsYV_MA"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:595306011903:android:0ac2bd4e77b63ba98900ca",
-        "android_client_info": {
-          "package_name": "com.webivew.demo"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDKWUYCW1PQzMXTL7YaTHdo-Le5jsYV_MA"
+          "current_key": "AIzaSyDJ6eHvBt3CSUVmQeVjx7mxN-65oX4fyAM"
         }
       ],
       "services": {

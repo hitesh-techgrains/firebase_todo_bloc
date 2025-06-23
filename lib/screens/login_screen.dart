@@ -1,9 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_todo_bloc/screens/tabs_screen.dart';
+
 import '../screens/register_screen.dart';
 import 'package:flutter/material.dart';
 import '../screens/forgot_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
   static const id = 'login_screen';
 
   @override
@@ -14,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void dispose() {
@@ -50,8 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   controller: _passwordController,
-                  decoration:
-                      const InputDecoration(labelText: 'Insert password'),
+                  decoration: const InputDecoration(labelText: 'Insert password'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Password is required';
@@ -65,19 +69,34 @@ class _LoginScreenState extends State<LoginScreen> {
               ElevatedButton(
                 onPressed: () {
                   final isValid = _formKey.currentState!.validate();
+                  if (isValid) {
+                    _auth
+                        .signInWithEmailAndPassword(email: _emailController.text.trim(), password: _passwordController.text.trim())
+                        .then((userCredential) {
+                          // Navigate to home screen or another screen after successful login
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Login successful"), backgroundColor: Colors.green));
+                          Navigator.of(context).pushReplacementNamed(TabsScreen.id);
+                        })
+                        .catchError((error) {
+                          // Handle login error
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.toString()), backgroundColor: Colors.red));
+                        });
+                  }
                 },
                 child: const Text('Login'),
               ),
               TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(RegisterScreen.id);
-                  },
-                  child: const Text('Don\'t have an Account?')),
+                onPressed: () {
+                  Navigator.of(context).pushNamed(RegisterScreen.id);
+                },
+                child: const Text('Don\'t have an Account?'),
+              ),
               TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(ForgotPasswordScreen.id);
-                  }, 
-                  child: const Text('Forget Password')),
+                onPressed: () {
+                  Navigator.of(context).pushNamed(ForgotPasswordScreen.id);
+                },
+                child: const Text('Forget Password'),
+              ),
             ],
           ),
         ),

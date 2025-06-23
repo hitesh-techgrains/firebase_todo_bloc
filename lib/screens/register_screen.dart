@@ -1,7 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_todo_bloc/screens/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:techgrains/com/techgrains/common/tg_log.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
+
   static const id = 'register_screen';
 
   @override
@@ -14,6 +18,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
 
   final TextEditingController _passwordController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void dispose() {
@@ -63,6 +68,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ElevatedButton(
               onPressed: () {
                 final isValid = _formKey.currentState!.validate();
+                if (isValid) {
+                  _auth
+                      .createUserWithEmailAndPassword(email: _emailController.text.trim(), password: _passwordController.text.trim())
+                      .then((userCredential) {
+                        // User registration successful
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(const SnackBar(content: Text('Registration successful'), backgroundColor: Colors.green));
+                        Navigator.pushReplacementNamed(context, LoginScreen.id);
+                      })
+                      .catchError((error) {
+                        // Handle registration error
+                        TGLog.d('Registration error: ${error.toString()}');
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text('Registration failed: ${error.message}'), backgroundColor: Colors.red));
+                      });
+                }
               },
               child: const Text('Register'),
             ),
