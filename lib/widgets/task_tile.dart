@@ -7,33 +7,25 @@ import '../blocs/bloc_exports.dart';
 import '../models/task.dart';
 
 class TaskTile extends StatelessWidget {
-  const TaskTile({
-    Key? key,
-    required this.task,
-  }) : super(key: key);
+  const TaskTile({Key? key, required this.task}) : super(key: key);
 
   final Task task;
 
   void _removeOrDeleteTask(BuildContext ctx, Task task) {
-    task.isDeleted!
-        ? ctx.read<TasksBloc>().add(DeleteTask(task: task))
-        : ctx.read<TasksBloc>().add(RemoveTask(task: task));
+    task.isDeleted! ? ctx.read<TasksBloc>().add(DeleteTask(task: task)) : ctx.read<TasksBloc>().add(RemoveTask(task: task));
   }
 
   void _editTask(BuildContext context) {
     showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        builder: (context) => SingleChildScrollView(
-              child: Container(
-                padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom,
-                ),
-                child: EditTaskScreen(
-                  oldTask: task,
-                ),
-              ),
-            ));
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: EditTaskScreen(oldTask: task),
+        ),
+      ),
+    );
   }
 
   @override
@@ -46,12 +38,8 @@ class TaskTile extends StatelessWidget {
           Expanded(
             child: Row(
               children: [
-                task.isFavorite == false
-                    ? const Icon(Icons.star_outline)
-                    : const Icon(Icons.star),
-                const SizedBox(
-                  width: 10,
-                ),
+                task.isFavorite == false ? const Icon(Icons.star_outline) : const Icon(Icons.star),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,18 +47,9 @@ class TaskTile extends StatelessWidget {
                       Text(
                         task.title,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 18,
-                          decoration:
-                              task.isDone! ? TextDecoration.lineThrough : null,
-                        ),
+                        style: TextStyle(fontSize: 18, decoration: task.isDone! ? TextDecoration.lineThrough : null),
                       ),
-                      Text(
-                        DateFormat()
-                            .add_yMMMd()
-                            .add_Hms()
-                            .format(DateTime.parse(task.date)),
-                      ),
+                      Text(DateFormat().add_yMMMd().add_Hms().format(DateTime.parse(task.date))),
                     ],
                   ),
                 ),
@@ -84,22 +63,19 @@ class TaskTile extends StatelessWidget {
                 onChanged: task.isDeleted == false
                     ? (value) {
                         context.read<TasksBloc>().add(UpdateTask(task: task));
+                        context.read<TasksBloc>().add(const GetAllTasks());
                       }
                     : null,
               ),
               PopupMenu(
                 task: task,
-                cancelOrDeleteCallback: () =>
-                    _removeOrDeleteTask(context, task),
-                likeOrDislikeCallback: () => context.read<TasksBloc>().add(
-                      MarkFavoriteOrUnfavoriteTask(task: task),
-                    ),
+                cancelOrDeleteCallback: () => _removeOrDeleteTask(context, task),
+                likeOrDislikeCallback: () => context.read<TasksBloc>().add(MarkFavoriteOrUnfavoriteTask(task: task)),
                 editTaskCallback: () {
                   Navigator.of(context).pop();
                   _editTask(context);
                 },
-                restoreTaskCallback: () =>
-                    context.read<TasksBloc>().add(RestoreTask(task: task)),
+                restoreTaskCallback: () => context.read<TasksBloc>().add(RestoreTask(task: task)),
               ),
             ],
           ),
@@ -108,9 +84,6 @@ class TaskTile extends StatelessWidget {
     );
   }
 }
-
-
-
 
 // ListTile(
 //       title: Text(

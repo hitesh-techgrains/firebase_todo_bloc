@@ -52,7 +52,10 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
     }
   }
 
-  void _onUpdateTask(UpdateTask event, Emitter<TasksState> emit) {}
+  void _onUpdateTask(UpdateTask event, Emitter<TasksState> emit) async {
+    Task updatedTask = event.task.copyWith(isDone: !event.task.isDone!);
+    await FireStoreRepository.update(task: updatedTask);
+  }
 
   void _onDeleteTask(DeleteTask event, Emitter<TasksState> emit) {}
 

@@ -25,4 +25,14 @@ class FireStoreRepository {
       return [];
     }
   }
+
+  //Update Task
+  static Future<void> update({required Task task}) async {
+    try {
+      await FirebaseFirestore.instance.collection(GetStorage().read('email')).doc(task.id).update(task.toMap());
+    } catch (e) {
+      // Handle any errors that occur during the update operation
+      print('Error updating task: $e');
+    }
+  }
 }
