@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_todo_bloc/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'recycle_bin.dart';
 import 'tabs_screen.dart';
@@ -41,6 +43,11 @@ class MyDrawer extends StatelessWidget {
               },
             ),
             const Divider(),
+            GestureDetector(
+              onTap: () => logout(context),
+              child: ListTile(leading: const Icon(Icons.logout), title: const Text('Logout'), trailing: null),
+            ),
+            const Divider(),
             BlocBuilder<SwitchBloc, SwitchState>(
               builder: (context, state) {
                 return Switch(
@@ -55,5 +62,15 @@ class MyDrawer extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void logout(context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      // Clear navigation stack and go to login screen
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => LoginScreen()), (Route<dynamic> route) => false);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Logout failed: $e")));
+    }
   }
 }
