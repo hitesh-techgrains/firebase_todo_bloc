@@ -59,13 +59,19 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
 
   void _onDeleteTask(DeleteTask event, Emitter<TasksState> emit) {}
 
-  void _onRemoveTask(RemoveTask event, Emitter<TasksState> emit) {}
+  void _onRemoveTask(RemoveTask event, Emitter<TasksState> emit) async {
+    Task removedTask = event.task.copyWith(isDeleted: true);
+    await FireStoreRepository.update(task: removedTask);
+  }
 
   void _onMarkFavoriteOrUnfavoriteTask(MarkFavoriteOrUnfavoriteTask event, Emitter<TasksState> emit) {}
 
   void _onEditTask(EditTask event, Emitter<TasksState> emit) {}
 
-  void _onRestoreTask(RestoreTask event, Emitter<TasksState> emit) {}
+  void _onRestoreTask(RestoreTask event, Emitter<TasksState> emit) async {
+    Task restoredTask = event.task.copyWith(isDeleted: false, isDone: false, date: DateTime.now().toString(), isFavorite: false);
+    await FireStoreRepository.update(task: restoredTask);
+  }
 
   void _onDeleteAllTask(DeleteAllTasks event, Emitter<TasksState> emit) {}
 }

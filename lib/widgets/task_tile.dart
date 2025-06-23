@@ -12,7 +12,9 @@ class TaskTile extends StatelessWidget {
   final Task task;
 
   void _removeOrDeleteTask(BuildContext ctx, Task task) {
-    task.isDeleted! ? ctx.read<TasksBloc>().add(DeleteTask(task: task)) : ctx.read<TasksBloc>().add(RemoveTask(task: task));
+    task.isDeleted!
+        ? ctx.read<TasksBloc>().add(DeleteTask(task: task))
+        : {ctx.read<TasksBloc>().add(RemoveTask(task: task)), ctx.read<TasksBloc>().add(const GetAllTasks())};
   }
 
   void _editTask(BuildContext context) {
@@ -75,7 +77,10 @@ class TaskTile extends StatelessWidget {
                   Navigator.of(context).pop();
                   _editTask(context);
                 },
-                restoreTaskCallback: () => context.read<TasksBloc>().add(RestoreTask(task: task)),
+                restoreTaskCallback: () {
+                  context.read<TasksBloc>().add(RestoreTask(task: task));
+                  context.read<TasksBloc>().add(const GetAllTasks());
+                },
               ),
             ],
           ),
@@ -84,22 +89,3 @@ class TaskTile extends StatelessWidget {
     );
   }
 }
-
-// ListTile(
-//       title: Text(
-//         task.title,
-//         overflow: TextOverflow.ellipsis,
-//         style: TextStyle(
-//           decoration: task.isDone! ? TextDecoration.lineThrough : null,
-//         ),
-//       ),
-//       trailing: Checkbox(
-//         value: task.isDone,
-//         onChanged: task.isDeleted == false
-//             ? (value) {
-//                 context.read<TasksBloc>().add(UpdateTask(task: task));
-//               }
-//             : null,
-//       ),
-//       onLongPress: () => _removeOrDeleteTask(context, task),
-//     );
