@@ -66,7 +66,10 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
     await FireStoreRepository.update(task: removedTask);
   }
 
-  void _onMarkFavoriteOrUnfavoriteTask(MarkFavoriteOrUnfavoriteTask event, Emitter<TasksState> emit) {}
+  void _onMarkFavoriteOrUnfavoriteTask(MarkFavoriteOrUnfavoriteTask event, Emitter<TasksState> emit) async {
+    Task updatedTask = event.task.copyWith(isFavorite: !event.task.isFavorite!);
+    await FireStoreRepository.update(task: updatedTask);
+  }
 
   void _onEditTask(EditTask event, Emitter<TasksState> emit) {}
 
