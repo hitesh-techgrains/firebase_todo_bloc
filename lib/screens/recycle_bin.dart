@@ -18,31 +18,21 @@ class RecycleBin extends StatelessWidget {
             title: const Text('Recycle Bin'),
             actions: [
               PopupMenuButton(
-                  itemBuilder: (context) => [
-                        PopupMenuItem(
-                            child: TextButton.icon(
-                              onPressed: null,
-                              icon: const Icon(Icons.delete_forever),
-                              label: const Text('Delete all tasks'),
-                            ),
-                            onTap: () => context
-                                .read<TasksBloc>()
-                                .add(DeleteAllTasks())),
-                      ])
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    child: TextButton.icon(onPressed: null, icon: const Icon(Icons.delete_forever), label: const Text('Delete all tasks')),
+                    onTap: () => {context.read<TasksBloc>().add(DeleteAllTasks()), context.read<TasksBloc>().add(const GetAllTasks())},
+                  ),
+                ],
+              ),
             ],
           ),
           drawer: const MyDrawer(),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Center(
-                child: Chip(
-                  label: Text(
-                    '${state.removedTasks.length} Tasks',
-                  ),
-                ),
-              ),
-              TasksList(tasksList: state.removedTasks)
+              Center(child: Chip(label: Text('${state.removedTasks.length} Tasks'))),
+              TasksList(tasksList: state.removedTasks),
             ],
           ),
         );

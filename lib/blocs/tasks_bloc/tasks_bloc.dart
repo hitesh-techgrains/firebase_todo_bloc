@@ -57,7 +57,9 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
     await FireStoreRepository.update(task: updatedTask);
   }
 
-  void _onDeleteTask(DeleteTask event, Emitter<TasksState> emit) {}
+  void _onDeleteTask(DeleteTask event, Emitter<TasksState> emit) async {
+    await FireStoreRepository.delete(task: event.task);
+  }
 
   void _onRemoveTask(RemoveTask event, Emitter<TasksState> emit) async {
     Task removedTask = event.task.copyWith(isDeleted: true);
@@ -73,5 +75,7 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
     await FireStoreRepository.update(task: restoredTask);
   }
 
-  void _onDeleteAllTask(DeleteAllTasks event, Emitter<TasksState> emit) {}
+  void _onDeleteAllTask(DeleteAllTasks event, Emitter<TasksState> emit) async {
+    await FireStoreRepository.deleteAllTasks(taskList: state.removedTasks);
+  }
 }

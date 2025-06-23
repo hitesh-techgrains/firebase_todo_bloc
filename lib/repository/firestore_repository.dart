@@ -35,4 +35,27 @@ class FireStoreRepository {
       print('Error updating task: $e');
     }
   }
+
+  //Delete Task
+  static Future<void> delete({required Task task}) async {
+    try {
+      await FirebaseFirestore.instance.collection(GetStorage().read('email')).doc(task.id).delete();
+    } catch (e) {
+      // Handle any errors that occur during the delete operation
+      print('Error deleting task: $e');
+    }
+  }
+
+  //Delete All Tasks
+  static Future<void> deleteAllTasks({required List<Task> taskList}) async {
+    try {
+      final data = FirebaseFirestore.instance.collection(GetStorage().read('email'));
+      for (var task in taskList) {
+        data.doc(task.id).delete();
+      }
+    } catch (e) {
+      // Handle any errors that occur during the delete all operation
+      print('Error deleting all tasks: $e');
+    }
+  }
 }
